@@ -1,0 +1,69 @@
+/* The room. Like the landing stage, it is a fixed-proportion box that fits
+   inside the window, and everything in it is placed in % and sized in cqw
+   (1cqw = 1% of the room width), so the whole room scales together. */
+.inside {
+  --room-w: min(100vw, 100vh * 16 / 9);
+  --room-w: min(100vw, 100dvh * 16 / 9); /* dvh = ignores mobile browser bars */
+  place-items: end center;   /* any spare space is above the room, where it is just wall */
+  /* On a wide screen the wall and floor carry on past the room: the tile is the room
+     followed by its mirror image, repeated sideways, with the real room centered on it. */
+  background:
+    url("../assets/inside/livingroom-tile.png") calc(50% + var(--room-w) / 2) 100% / calc(var(--room-w) * 2) auto repeat-x,
+    #fff7fe;                 /* the wall colour of livingroom.png */
+}
+
+.room {
+  position: relative;
+  width: var(--room-w);
+  aspect-ratio: 16 / 9;
+  container-type: inline-size;
+}
+.room__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+}
+
+/* ---------- things in the room ---------- */
+.room-item {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.room-item img {
+  width: 100%; height: 100%;
+  transition: filter 0.2s ease-out;
+}
+.room-item:hover, .room-item:focus-visible { z-index: 1; }
+.room-item:hover img, .room-item:focus-visible img {
+  filter: drop-shadow(0.45cqw 0.6cqw 0.7cqw rgba(60, 50, 70, 0.35));
+}
+.room-item:focus-visible { outline: none; }
+
+/* ---------- labels ---------- */
+/* --tag-x / --tag-y: the middle of the label, as a % of the item */
+.room-item__label {
+  position: absolute;
+  left: var(--tag-x); top: var(--tag-y);
+  width: 17.45cqw; height: 4.75cqw;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 0.15cqw solid var(--dash);
+  box-shadow: 0 0.4cqw 0.8cqw rgba(60, 50, 70, 0.25);
+  font: 400 1.55cqw/1 var(--font-mono);
+  color: var(--ink);
+  white-space: nowrap;
+  translate: -50% -35%;       /* starts a little low, floats up into place */
+  opacity: 0;
+  transition: opacity 0.18s ease-out, translate 0.18s ease-out;
+  pointer-events: none;
+}
+.room-item:hover .room-item__label,
+.room-item:focus-visible .room-item__label {
+  opacity: 1;
+  translate: -50% -50%;
+}

@@ -1,0 +1,13 @@
+/* Cat-food transition (see components/kibble/) */
+.kibble-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden; /* the canvases reach above the screen, so hide the overflow */
+}
+.kibble-canvas {
+  position: absolute;
+  left: 0;
+  display: block;
+  will-change: transform;
+}

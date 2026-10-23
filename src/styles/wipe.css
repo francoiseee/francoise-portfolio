@@ -1,0 +1,45 @@
+/* The pink circle wipe between the room and the certification book. */
+:root { --blush: #f9d6e8; }   /* the book page's background, so the hand-off is seamless */
+
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  background: var(--blush);
+  clip-path: circle(0 at var(--x) var(--y));
+  animation: wipe-grow 0.85s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+@keyframes wipe-grow {
+  to { clip-path: circle(150vmax at var(--x) var(--y)); }
+}
+
+/* the sticker spins out of the click, overshoots, then settles */
+.wipe__sticker {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  width: clamp(5rem, 16vmin, 12rem);
+  translate: -50% -50%;
+  animation: sticker-pop 0.85s ease-out both;
+}
+@keyframes sticker-pop {
+  from { scale: 0;    rotate: -120deg; }
+  45%  { scale: 1.25; rotate: 25deg; }
+  to   { scale: 1;    rotate: 180deg; }
+}
+
+/* sparkles burst away in different directions */
+.wipe__sparkles {
+  position: absolute;
+  left: var(--x); top: var(--y);
+  width: clamp(3.5rem, 11vmin, 8rem);
+  animation: sparkle-fly 0.85s ease-out both;
+}
+.wipe__sparkles--a { --dx: -26vmin; --dy: -18vmin; --spin: -30deg; }
+.wipe__sparkles--b { --dx: 26vmin;  --dy: -10vmin; --spin: 35deg;  animation-delay: 0.05s; }
+.wipe__sparkles--c { --dx: 4vmin;   --dy: 24vmin;  --spin: 20deg;  animation-delay: 0.1s; }
+@keyframes sparkle-fly {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  30%  { opacity: 1; }
+  to   { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.3) rotate(var(--spin)); }
+}

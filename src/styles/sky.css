@@ -1,0 +1,58 @@
+/* The sky is shared by the home and house screens. The screen decides how big
+   one sky unit is (--sky-unit) and the sky scales to match. */
+
+.sky,
+.sky > *,
+.paper {
+  position: absolute;
+  inset: 0;
+}
+
+/* The sky wash is one 100-unit strip that repeats sideways (the sun is drawn
+   once on top), and the whole sky fades out into the plain paper below it. */
+.sky__wash {
+  background-size: calc(var(--sky-unit) * 100) 100%;
+  background-repeat: repeat-x;
+  background-position: center top;
+}
+
+.sky {
+  --sky-solid: calc(var(--sky-unit) * 24);
+  --sky-end:   calc(var(--sky-unit) * 35);
+  mask-image: linear-gradient(180deg, #000 var(--sky-solid), transparent var(--sky-end));
+}
+
+/* Graph paper. It is laid over the sky with "multiply": white stays clear,
+   so only the gray lines show, tinted by the sky colors. */
+.paper {
+  --grid: calc(var(--sky-unit) * 2.55);
+  --line: max(1px, calc(var(--sky-unit) * 0.16));
+  mix-blend-mode: multiply;
+  background-color: #fff;
+  background-image:
+    linear-gradient(#d3d3d3 var(--line), transparent 0),
+    linear-gradient(90deg, #d3d3d3 var(--line), transparent 0);
+  background-size: var(--grid) var(--grid);
+  background-position: center top;
+}
+
+.cloud {
+  position: absolute;
+  left: calc(50% + var(--sky-unit) * var(--x-wide));
+  top: calc(var(--sky-unit) * var(--y-wide));
+  width: calc(var(--sky-unit) * var(--w-wide));
+  height: auto;
+  translate: -50% -50%; /* x/y are centers */
+  pointer-events: none;
+}
+
+/* phones: the sky gets a little bigger, so it also fades out lower down */
+@media (max-aspect-ratio: 4 / 5) {
+  .sky { --sky-solid: 38%; --sky-end: 54%; }
+  .cloud--extra { display: none; } /* phones keep just the three clouds */
+  .cloud {
+    left: calc(50% + var(--sky-unit) * var(--x-tall));
+    top: calc(var(--sky-unit) * var(--y-tall));
+    width: calc(var(--sky-unit) * var(--w-tall));
+  }
+}

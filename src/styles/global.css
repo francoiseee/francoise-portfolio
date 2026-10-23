@@ -1,0 +1,138 @@
+/* ---------- tokens ---------- */
+:root {
+  --pink: #ffadcf;
+  --blue: #94d8f3;
+  --yellow: #f2d065;
+  --dash: #9a86a8;      /* dashed title border */
+  --ink: #6d5360;       /* hint text */
+  --font-title: "Gaegu", "Comic Sans MS", cursive;
+  --font-mono: "Source Code Pro", ui-monospace, monospace;
+}
+
+/* ---------- reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { overflow: hidden; }
+img { display: block; user-select: none; -webkit-user-drag: none; }
+
+/* ---------- page + stage ---------- */
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fff url("../assets/landing/grid.png") center / cover no-repeat;
+}
+
+/* The stage is a fixed-proportion box that fits inside the window.
+   Everything in it is placed in % and sized in cqw (1cqw = 1% of the stage
+   width), so the whole composition scales together.
+   Two layouts share the same markup — only these tokens change:
+   wide (landscape) is the default, tall (phones/portrait) is below. */
+.stage {
+  /* layout tokens: wide */
+  --stage-ratio: 2000 / 1130;
+  --cat-top: 10.4%;   --cat-width: 11%;
+  --box-left: 21.9%;  --box-top: 31.15%;  --box-width: 57.6%;  --box-height: 33.9%;
+  --title-size: 12.6cqw;
+  --hint-top: 73.5%;  --hint-size: 2.45cqw;
+  --box-border: 0.22cqw;
+
+  position: relative;
+  width: min(100vw, 100vh * 2000 / 1130);
+  width: min(100vw, 100dvh * 2000 / 1130); /* dvh = ignores mobile browser bars */
+  aspect-ratio: var(--stage-ratio);
+  container-type: inline-size;
+}
+
+/* tall layout: portrait screens (phones, narrow windows).
+   The stage fills the whole screen; vertical positions are % of the screen
+   height, sizes are in cqw so the cat/title stay big on any phone. */
+@media (max-aspect-ratio: 4 / 5) {
+  .stage {
+    --stage-ratio: auto;
+    --cat-top: 15%;     --cat-width: 38%;
+    --box-left: 6%;     --box-top: 35%;     --box-width: 88%;   --box-height: 44cqw;
+    --box-border: 0.6cqw;
+    --title-size: 20.5cqw;
+    --hint-top: calc(var(--box-top) + var(--box-height) + 6cqw);
+    --hint-size: 4.6cqw;
+    /* full height; width never wider than half the height (1:2) so the
+       layout keeps its proportions on tablets in portrait */
+    width: min(100vw, 50vh);
+    width: min(100vw, 50dvh);
+    height: 100vh;
+    height: 100dvh;
+  }
+}
+
+/* ---------- doodles ---------- */
+.doodle {
+  position: absolute;
+  left: var(--wide-x); top: var(--wide-y); width: var(--wide-w);
+  translate: -50% -50%; /* x/y in the data file are centers */
+  pointer-events: none;
+}
+.doodle img { width: 100%; height: auto; }
+@media (max-aspect-ratio: 4 / 5) {
+  .doodle { left: var(--tall-x); top: var(--tall-y); width: var(--tall-w); }
+  .doodle--wide-only, .hint__bang { display: none; } /* phones: no extras, no "!" */
+}
+
+/* ---------- title ---------- */
+.title-box {
+  position: absolute;
+  left: var(--box-left); top: var(--box-top);
+  width: var(--box-width); height: var(--box-height);
+  display: grid;
+  place-items: center;
+  border: var(--box-border) dashed var(--dash);
+}
+.title {
+  margin: 0;
+  display: flex;
+  font: 700 var(--title-size)/1 var(--font-title);
+  color: var(--pink);
+  -webkit-text-stroke: 0.45cqw var(--pink); /* makes the handwriting chunkier */
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+
+/* ---------- hint ---------- */
+.hint {
+  position: absolute;
+  left: 0; right: 0; top: var(--hint-top);
+  margin: 0;
+  text-align: center;
+  font: 400 var(--hint-size)/1.3 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+/* ---------- cat ---------- */
+.cat {
+  position: absolute;
+  left: 50%; top: var(--cat-top);
+  width: var(--cat-width);
+  translate: -50% 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.cat:focus-visible { outline: 0.25cqw dashed var(--dash); outline-offset: 0.5cqw; border-radius: 1cqw; }
+.cat__body { position: relative; display: block; transform-origin: 50% 100%; }
+.cat__img { width: 100%; height: auto; }
+.cat__img--yawn { position: absolute; inset: 0; opacity: 0; }
+.cat__body.is-yawning .cat__img--idle { opacity: 0; }
+.cat__body.is-yawning .cat__img--yawn { opacity: 1; }
+
+/* ---------- click confetti ---------- */
+.burst { position: absolute; left: 50%; top: 45%; pointer-events: none; }
+.burst__star {
+  position: absolute;
+  font-size: 2.2cqw;
+  line-height: 1;
+  animation: burst-fly 0.9s ease-out forwards;
+}

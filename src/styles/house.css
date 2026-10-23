@@ -1,0 +1,151 @@
+/* The house screen. Everything here is measured in --u ("units"):
+   1 unit = 1% of the yard width. The yard is as wide as the screen but never
+   wider than the design proportions allow for the screen height, so on a wide
+   screen the units stay small and the props are spread out across the extra
+   width instead of being stretched. */
+.house {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  container-type: size;
+  overflow: hidden;
+  isolation: isolate; /* own backdrop, so the paper only blends with the sky */
+  background: #fff;
+}
+
+.world {
+  --u: min(1cqw, 0.8624cqh); /* 0.8624 = design width / height (840 x 974) */
+  --sky-unit: var(--u);
+  --ground: calc(var(--u) * 20);   /* height of the ground line, where the house stands */
+  --cat-w: 26;                     /* cat width in units */
+  position: absolute;
+  inset: 0;
+  touch-action: manipulation;
+}
+
+/* phones: the sky matches the home screen, and the ground line is a share of
+   the screen height so the house sits well on any phone */
+@media (max-aspect-ratio: 4 / 5) {
+  .world {
+    --u: 1cqw;
+    --sky-unit: 1.15cqw;
+    --ground: 36cqh;
+    --cat-w: 38;
+  }
+}
+
+.yard {
+  position: absolute;
+  inset: 0;
+  isolation: isolate; /* the cat and ball sort themselves by depth inside here */
+}
+
+/* ---------- props ---------- */
+.prop {
+  --x: var(--x-wide); --dy: var(--dy-wide); --w: var(--w-wide); --bleed: var(--bleed-wide);
+  --reach: calc(50cqw - var(--w) * var(--u) / 2 + var(--bleed) * var(--u)); /* furthest from the center that still fits on screen */
+  position: absolute;
+  left: calc(50% + clamp(var(--reach) * -1, var(--x) * var(--u), var(--reach)));
+  bottom: calc(var(--ground) + var(--dy) * var(--u));
+  width: calc(var(--w) * var(--u));
+  height: auto;
+  translate: -50% 0;
+  pointer-events: none;
+}
+@media (max-aspect-ratio: 4 / 5) {
+  .prop { --x: var(--x-tall); --dy: var(--dy-tall); --w: var(--w-tall); --bleed: var(--bleed-tall); }
+}
+
+/* ---------- the ball ---------- */
+/* --move-x / --move-y / --s / --face are written by the game (hooks/useCatGame.js) */
+.ball {
+  translate: calc(-50% + var(--move-x, 0) * 1px) calc(var(--move-y, 0) * -1px);
+  scale: var(--s, 1);
+  transform-origin: 50% 100%;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+}
+.ball.is-held { cursor: grabbing; filter: drop-shadow(0 0.8cqw 0.6cqw rgba(60, 50, 70, 0.3)); }
+
+/* ---------- the cat ---------- */
+/* one picture, three poses side by side: standing, walking 1, walking 2 */
+.house-cat {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--u) * 0.8);
+  width: calc(var(--u) * var(--cat-w));
+  aspect-ratio: 323 / 227;
+  background: no-repeat 0 0 / 300% 100%;
+  translate: calc(-50% + var(--move-x, 0) * 1px) calc(var(--move-y, 0) * -1px);
+  scale: calc(var(--face, 1) * var(--s, 1)) var(--s, 1);
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+
+/* ---------- tap ripple ---------- */
+/* a ring that spreads from wherever you tap; the game adds it and removes it when it ends */
+.ripple {
+  position: absolute;
+  z-index: 2000;
+  width: calc(var(--u) * 9);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border: max(3px, 0.45cqw) solid #7fa3e6;
+  border-radius: 50%;
+  background: rgba(127, 163, 230, 0.18);
+  pointer-events: none;
+  animation: ripple 0.7s ease-out forwards;
+}
+
+/* ---------- foreground bushes ---------- */
+.bushes {
+  position: absolute;
+  width: calc(var(--u) * 52.7);
+  height: auto;
+  pointer-events: none;
+}
+.bushes--left  { left:  calc(var(--u) * -2.7);  bottom: calc(var(--u) * -3.1); }
+.bushes--right { right: calc(var(--u) * -2.7);  bottom: calc(var(--u) * -3.1); scale: -1 1; }
+
+/* ---------- the "Get to know me!" sign ---------- */
+/* The wrapper is a see-through copy of the house picture, so the sign can sit on the roof edge in % of the house. */
+.house-label {
+  --wood: #c98f55;
+  --wood-dark: #7a4424;     /* the same brown as the house outline */
+  aspect-ratio: 2019 / 1725; /* the house picture */
+  container-type: inline-size;
+}
+/* a wooden plank: wood grain lines, two nails, a dark edge */
+.house-label__sign {
+  position: absolute;
+  left: 46.2%; top: 42%;
+  translate: -50% -50%;
+  margin: 0;
+  padding: 4cqw 3.4cqw;
+  background:
+    radial-gradient(circle at 1.6cqw 50%, var(--wood-dark) 0.45cqw, transparent 0.55cqw),
+    radial-gradient(circle at calc(100% - 1.6cqw) 50%, var(--wood-dark) 0.45cqw, transparent 0.55cqw),
+    repeating-linear-gradient(180deg, transparent 0 0.9cqw, rgba(122, 68, 36, 0.16) 0.9cqw 1.1cqw, transparent 1.1cqw 2.3cqw),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 40%),
+    var(--wood);
+  border: 0.4cqw solid var(--wood-dark);
+  border-radius: 1cqw;
+  filter: drop-shadow(0 0.6cqw 0.8cqw rgba(60, 50, 70, 0.3));
+  font: 400 2.9cqw/1.2 var(--font-mono);
+  color: #fff3dc;
+  text-shadow: 0 0.15cqw 0 rgba(90, 48, 20, 0.6);
+  white-space: nowrap;
+}
+/* the little tail pointing down at the door: a dark one with a smaller wooden one on top, so it has an edge too */
+.house-label__sign::before,
+.house-label__sign::after {
+  content: "";
+  position: absolute;
+  left: 53%; top: 100%;
+  translate: -50% 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.house-label__sign::before { width: 3.6cqw; height: 2.7cqw; background: var(--wood-dark); }
+.house-label__sign::after  { width: 2.6cqw; height: 1.9cqw; background: var(--wood); }
