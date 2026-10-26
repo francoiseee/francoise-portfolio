@@ -17,7 +17,7 @@ export const CANVAS = { width: 3840, height: 2160 };
 
 export const items = [
   { id: "exit",           label: "Exit",           alt: "Window with plants",  src: windowImg, x: 110,  y: 168,  w: 1382, h: 1314, tag: { x: 49, y: 1 },   to: "/house" },
-  { id: "experience",     label: "Experience",     alt: "Notice board",        src: boardImg,  x: 1708, y: 174,  w: 1115, h: 916,  tag: { x: 49, y: 1 } },
+  { id: "experience",     label: "Experience",     alt: "Notice board",        src: boardImg,  x: 1708, y: 174,  w: 1115, h: 916,  tag: { x: 49, y: 1 }, to: "/experience", wipe: true },
   { id: "about",          label: "About Me",       alt: "Photo of me",         src: photoImg,  x: 3077, y: 387,  w: 682,  h: 746,  tag: { x: 47, y: 97 } },
   { id: "certifications", label: "Certifications", alt: "Stack of books",      src: booksImg,  x: 183,  y: 1558, w: 504,  h: 542,  tag: { x: 52, y: 84 }, to: "/certifications", wipe: true },
   { id: "contact",        label: "Contact Me",     alt: "Phone",               src: phoneImg,  x: 1002, y: 1729, w: 279,  h: 383,  tag: { x: 43, y: -13 } },

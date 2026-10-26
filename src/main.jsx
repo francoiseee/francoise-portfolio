@@ -15,6 +15,7 @@ import "./styles/house.css";
 import "./styles/inside.css";
 import "./styles/wipe.css";
 import "./styles/certifications.css";
+import "./styles/experience.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(

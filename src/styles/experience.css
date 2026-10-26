@@ -1,0 +1,238 @@
+/* The experience page: a cork board of sticky notes you can drag around.
+   Like the room, the page is a fixed-proportion stage that fits the window.
+   Everything on it is placed in % and sized in cqw (1cqw = 1% of the stage's
+   width), so the whole board scales together. Where things start is in
+   data/experience.js. */
+.experience {
+  --plum: #6d4458;
+  --rose: #9a5a6e;
+  --line: #7a5a6c;       /* outlines of the sign and buttons */
+  --wood: #94593a;
+  --cork: #cd9468;
+  --tape: rgba(241, 214, 150, 0.85);
+
+  --stage-w: min(100vw, 100vh * 2000 / 1193);
+  --stage-w: min(100vw, 100dvh * 2000 / 1193); /* dvh = ignores mobile browser bars */
+
+  position: relative;
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fdf1fb;
+  color: var(--plum);
+  font-family: var(--font-mono);
+  /* the pink circle from the room hands over to this page, so start pink and fade out of it */
+  animation: from-blush 0.7s ease-out;
+}
+@keyframes from-blush { from { background-color: var(--blush); } }
+
+.exp-stage {
+  position: relative;
+  width: var(--stage-w);
+  aspect-ratio: 2000 / 1193;
+  container-type: inline-size;
+}
+
+/* ---------- back button + sign ---------- */
+/* the same pill button as on the certification book (.pill, in certifications.css),
+   in the same place; these are the colours that page gives it */
+.exp-exit {
+  --paper: #fdf6ea;
+  --line: #4a2a2a;
+  --rose: #c9506a;
+  --font-body: "Nunito", system-ui, sans-serif;
+  position: absolute;
+  top: 2.5rem; left: 3rem;
+  z-index: 2;
+}
+
+.exp-sign {
+  position: absolute;
+  left: 23.3%; top: 4.6%;
+  width: 53.9%; height: 11.5%;
+  display: grid;
+  place-content: center;
+  gap: 1.1cqw;
+  background: #fff;
+  border: 0.18cqw solid var(--line);
+  box-shadow: 0.4cqw 0.5cqw 0.9cqw rgba(122, 90, 108, 0.22);
+  text-align: center;
+}
+.exp-sign h1 { margin: 0; font: 400 2.3cqw/1 var(--font-mono); letter-spacing: -0.04em; text-transform: uppercase; }
+.exp-sign p { margin: 0; font-size: 0.85cqw; letter-spacing: 0.08em; color: var(--rose); }
+
+/* two pieces of tape holding the sign up */
+.exp-sign::before, .exp-sign::after {
+  content: "";
+  position: absolute;
+  background: var(--tape);
+  box-shadow: 0 0.1cqw 0.25cqw rgba(0, 0, 0, 0.1);
+}
+.exp-sign::before { left: 7.8%;  top: -1.6cqw; width: 9.5cqw; height: 2.9cqw; translate: -50% 0; rotate: -3deg; }
+.exp-sign::after  { left: 87.6%; top: -1.2cqw; width: 7.3cqw; height: 2.4cqw; translate: -50% 0; rotate: 5deg; }
+
+/* ---------- the board ---------- */
+.board {
+  position: absolute;
+  left: 13.85%; top: 20.6%;
+  width: 72.7%; height: 61%;
+  padding: 0.7cqw;
+  background: var(--wood);
+  box-shadow: 0.5cqw 0.9cqw 1.6cqw rgba(90, 50, 40, 0.3);
+}
+
+.board__cork {
+  position: relative;
+  height: 100%;
+  border: 0.3cqw solid #7b4a30;
+  background-color: var(--cork);
+  /* a speckle of two sizes, so the cork does not look flat */
+  background-image:
+    radial-gradient(rgba(110, 65, 35, 0.2) 0.09cqw, transparent 0.12cqw),
+    radial-gradient(rgba(255, 225, 190, 0.22) 0.1cqw, transparent 0.14cqw);
+  background-size: 0.7cqw 0.7cqw, 1.1cqw 1.1cqw;
+  background-position: 0 0, 0.4cqw 0.3cqw;
+}
+.board__cork::before {            /* the thin line a little inside the frame */
+  content: "";
+  position: absolute;
+  inset: 0.7cqw;
+  border: 0.12cqw solid #8a5434;
+}
+.board__strings { position: absolute; inset: 0; width: 100%; height: 100%; }
+.board__strings line { stroke: #8a5434; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.board__label {
+  position: absolute;
+  left: 50%; top: 1.1cqw;
+  translate: -50% 0;
+  font-size: 1.1cqw;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #5a2f22;               /* darker than the page text, so it stands out on the cork */
+}
+
+/* ---------- things that stay where they are put ---------- */
+.pinned {
+  position: absolute;
+  z-index: 1;                     /* under the notes */
+  width: var(--w);
+  rotate: var(--tilt);
+}
+
+/* ---------- the notes you can drag ---------- */
+.drag {
+  position: absolute;
+  width: var(--w);
+  rotate: var(--tilt);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;             /* so a finger drags the note instead of scrolling the page */
+  transition: width 0.18s, rotate 0.18s;
+}
+.drag.is-dragging { cursor: grabbing; }
+.drag.is-open:not(.is-dragging) { transition: width 0.18s, rotate 0.18s, left 0.18s, top 0.18s; }   /* slides back onto the board if it grew past the edge */
+.drag.is-open { width: calc(var(--w) * 1.44); rotate: 0deg; }   /* opened: bigger and straight */
+
+/* sticky note */
+.note {
+  position: relative;
+  aspect-ratio: 287 / 298;
+  display: flex;
+  flex-direction: column;
+  padding: 2.9cqw 1.2cqw 1cqw 1.6cqw;
+  background: var(--paper);
+  box-shadow: 0.35cqw 0.45cqw 0.65cqw rgba(70, 37, 25, 0.26);
+  transition: box-shadow 0.18s;
+}
+.drag:hover .note { box-shadow: 0.5cqw 0.65cqw 0.9cqw rgba(70, 37, 25, 0.32); }
+.drag.is-open .note { box-shadow: 0.7cqw 0.9cqw 1.2cqw rgba(70, 37, 25, 0.34); }
+.note__pin {
+  position: absolute;
+  top: 0.9cqw; left: 48%;
+  width: 1.15cqw; aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f6a0b2 0 12%, #d4476a 45%, #a02a4b);
+  box-shadow: 0.1cqw 0.25cqw 0.3cqw rgba(60, 20, 30, 0.4);
+}
+.note__period { margin: 0; font-size: 0.75cqw; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); }
+.note__role { margin: 1.2cqw 0 0.5cqw; font: 400 1.25cqw/1.2 var(--font-mono); }
+.note__org { margin: 0; font-size: 0.9cqw; line-height: 1.35; opacity: 0.85; }
+/* what was done there: shown when the note is open */
+.note__details { margin-top: 1.1cqw; font-size: 0.85cqw; line-height: 1.6; }
+.note__achievements, .note__skills { margin: 0; padding: 0; list-style: none; }
+.note__achievements { display: grid; gap: 0.5cqw; }
+.note__achievements li { position: relative; padding-left: 1cqw; }
+.note__achievements li::before { content: "\2014"; position: absolute; left: 0; }   /* 2014 = a long dash */
+.note__skills { display: flex; flex-wrap: wrap; gap: 0.35cqw; margin-top: 0.9cqw; }
+.note__skills li {
+  padding: 0.3cqw 0.55cqw;
+  background: rgba(255, 255, 255, 0.55);
+  border: 0.07cqw solid rgba(124, 96, 107, 0.35);
+  color: #76525e;
+  font-size: 0.65cqw;
+}
+
+.note__peek {
+  margin: auto 0 0 auto;
+  padding: 0.4cqw 0;
+  background: none;
+  border: 0;
+  color: var(--rose);
+  font: 400 0.75cqw/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-decoration: underline;
+  cursor: inherit;
+}
+.note__peek:focus-visible { outline: 0.15cqw dashed var(--rose); outline-offset: 0.2cqw; }
+
+/* tape holding the polaroid and the quote card */
+.taped { position: relative; }
+.taped::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: -0.9cqw;
+  width: 4.7cqw; height: 1.7cqw;
+  translate: -50% 0;
+  rotate: -5deg;
+  background: var(--tape);
+  box-shadow: 0 0.1cqw 0.25cqw rgba(0, 0, 0, 0.1);
+}
+
+/* polaroid */
+.polaroid {
+  margin: 0;
+  padding: 9% 9% 0;
+  background: #fffdf8;
+  box-shadow: 0.2cqw 0.45cqw 0.9cqw rgba(80, 45, 30, 0.28);
+}
+.polaroid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.polaroid figcaption { padding: 8% 0 11%; text-align: center; font-size: 0.95cqw; }
+
+/* quote card */
+.quote {
+  margin: 0;
+  padding: 2.2cqw 2cqw 2cqw;
+  background: #fdfbf2;
+  text-align: center;
+  box-shadow: 0.2cqw 0.4cqw 0.8cqw rgba(80, 45, 30, 0.22);
+}
+.quote p { margin: 0; }
+.quote__eyebrow { font-size: 0.8cqw; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rose); }
+.quote__text { margin-top: 1.1cqw !important; font-size: 1.15cqw; line-height: 1.5; }
+
+/* certificate with its binder clip */
+.certificate { position: relative; }
+.certificate__img { width: 100%; box-shadow: 0.2cqw 0.4cqw 0.8cqw rgba(80, 45, 30, 0.25); }
+.certificate__clip {
+  position: absolute;
+  left: 36%; top: -3.7cqw;
+  width: 3.4cqw;
+  pointer-events: none;
+  filter: drop-shadow(0.1cqw 0.25cqw 0.2cqw rgba(60, 30, 30, 0.3));
+}
+
+/* ---------- for visitors who want less movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .experience, .experience * { animation: none !important; transition: none !important; }
+}

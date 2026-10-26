@@ -4,6 +4,7 @@ import Home from "./pages/Home.jsx";
 import House from "./pages/House.jsx";
 import Inside from "./pages/Inside.jsx";
 import Certifications from "./pages/Certifications.jsx";
+import Experience from "./pages/Experience.jsx";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/house" element={<House />} />
         <Route path="/inside" element={<Inside />} />
         <Route path="/certifications" element={<Certifications />} />
+        <Route path="/experience" element={<Experience />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
