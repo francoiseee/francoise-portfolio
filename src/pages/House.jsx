@@ -5,7 +5,7 @@ import HouseLabel from "../components/house/HouseLabel.jsx";
 import Prop from "../components/house/Prop.jsx";
 import WalkingCat from "../components/house/WalkingCat.jsx";
 import KibbleFill from "../components/kibble/KibbleFill.jsx";
-import bushesImg from "../assets/homepage/bushes.png";
+import bushesImg from "../assets/homepage/bushes.webp";
 import { props } from "../data/house.js";
 import { useCatGame } from "../hooks/useCatGame.js";
 

@@ -25,7 +25,6 @@
   /* the pink circle from the room hands over to this page, so start pink and fade out of it */
   animation: from-blush 0.7s ease-out;
 }
-@keyframes from-blush { from { background-color: var(--blush); } }
 
 .exp-stage {
   position: relative;
@@ -34,19 +33,7 @@
   container-type: inline-size;
 }
 
-/* ---------- back button + sign ---------- */
-/* the same pill button as on the certification book (.pill, in certifications.css),
-   in the same place; these are the colours that page gives it */
-.exp-exit {
-  --paper: #fdf6ea;
-  --line: #4a2a2a;
-  --rose: #c9506a;
-  --font-body: "Nunito", system-ui, sans-serif;
-  position: absolute;
-  top: 2.5rem; left: 3rem;
-  z-index: 2;
-}
-
+/* ---------- sign ---------- */
 .exp-sign {
   position: absolute;
   left: 23.3%; top: 4.6%;

@@ -12,10 +12,15 @@ import "./styles/kibble.css";
 import "./styles/sky.css";
 import "./styles/home.css";
 import "./styles/house.css";
+import "./styles/radio.css";
 import "./styles/inside.css";
 import "./styles/wipe.css";
 import "./styles/certifications.css";
 import "./styles/experience.css";
+import "./styles/work.css";
+import "./styles/contact.css";
+import "./styles/about.css";
+import "./styles/surprise.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(

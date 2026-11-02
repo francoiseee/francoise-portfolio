@@ -5,9 +5,15 @@
   --yellow: #f2d065;
   --dash: #9a86a8;      /* dashed title border */
   --ink: #6d5360;       /* hint text */
+  --blush: #f9d6e8;     /* the pink of the page wipe, so the hand-off to each page is seamless */
   --font-title: "Gaegu", "Comic Sans MS", cursive;
+  --font-body: "Nunito", system-ui, sans-serif;
   --font-mono: "Source Code Pro", ui-monospace, monospace;
 }
+
+/* ---------- browser bits, themed ---------- */
+::selection { background: #f7b9d2; color: #4a2a3a; }
+:focus-visible { outline: 0.15rem dashed #c9506a; outline-offset: 0.2rem; }
 
 /* ---------- reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -21,7 +27,7 @@ img { display: block; user-select: none; -webkit-user-drag: none; }
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: #fff url("../assets/landing/grid.png") center / cover no-repeat;
+  background: #fff url("../assets/landing/grid.webp") center / cover no-repeat;
 }
 
 /* The stage is a fixed-proportion box that fits inside the window.
@@ -135,4 +141,59 @@ img { display: block; user-select: none; -webkit-user-drag: none; }
   font-size: 2.2cqw;
   line-height: 1;
   animation: burst-fly 0.9s ease-out forwards;
+}
+
+/* ---------- screen readers only (used on every page) ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- pill button (Back, Previous, Next) ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  background: #fdf6ea;
+  border: 0.15rem solid #4a2a2a;
+  box-shadow: 0.25rem 0.3rem 0 rgba(120, 70, 90, 0.25);
+  color: #4a2a2a;
+  font: 800 1rem/1 var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.pill:hover:not(:disabled) { transform: translateY(-0.15rem); box-shadow: 0.25rem 0.45rem 0 rgba(120, 70, 90, 0.25); }
+.pill:active:not(:disabled) { transform: translateY(0.1rem); box-shadow: 0.1rem 0.15rem 0 rgba(120, 70, 90, 0.25); }
+.pill:disabled { opacity: 0.45; cursor: default; }
+.pill:focus-visible { outline-width: 0.2rem; outline-offset: 0.25rem; }
+.pill__icon { width: 1.1rem; height: 1.1rem; }
+
+/* where the Back button sits (components/BackButton.jsx) */
+.back-button { position: absolute; top: 2.5rem; left: 3rem; z-index: 2; }
+
+@media (max-width: 900px) {
+  .pill__extra { display: none; }   /* "Back to my room" -> "Back", "Next page" -> "Next" */
+  .back-button { top: 1.25rem; left: 1rem; }
+}
+@media (max-width: 700px) {
+  .pill { padding: 0.7rem 1.1rem; font-size: 0.9rem; }
+}
+
+/* ---------- credit (bottom corner of every page, from App.jsx) ---------- */
+.credit {
+  position: fixed;
+  right: 0.9rem; bottom: 0.6rem;
+  z-index: 50;
+  margin: 0;
+  font: 400 0.7rem/1 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  opacity: 0.75;
+  pointer-events: none;   /* never gets in the way of a click */
 }

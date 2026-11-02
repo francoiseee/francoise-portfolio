@@ -4,7 +4,7 @@ import KibbleDrain from "../components/kibble/KibbleDrain.jsx";
 import { pileStore } from "../components/kibble/pileStore.js";
 import PageWipe from "../components/inside/PageWipe.jsx";
 import RoomItem from "../components/inside/RoomItem.jsx";
-import roomImg from "../assets/inside/livingroom.png";
+import roomImg from "../assets/inside/livingroom.webp";
 import { items } from "../data/inside.js";
 import { prefersReducedMotion } from "../utils/motion.js";
 

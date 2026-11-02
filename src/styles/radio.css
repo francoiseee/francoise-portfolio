@@ -1,0 +1,143 @@
+/* The little music player (components/Radio.jsx), top-right on every page from the
+   house on. Open on the house page (over the sky, clear of the ball and cat), folded
+   to just the record everywhere else. */
+.radio {
+  --line: #4a2a3a;
+  --paper: #fffaf6;
+  --pink: #f2a7bd;
+
+  position: fixed;
+  z-index: 20;
+  right: 1.5rem; top: 1.5rem;
+  width: 17.5rem;
+  padding: 0.9rem 0.95rem 0.8rem;
+  background: var(--paper);
+  border: 0.15rem solid var(--line);
+  border-radius: 1rem;
+  box-shadow: 0.3rem 0.35rem 0 rgba(120, 70, 90, 0.25), 0 1rem 2rem -1rem rgba(110, 60, 80, 0.3);
+  color: var(--line);
+  font-family: var(--font-mono);
+  animation: slide-in 0.5s 0.6s ease-out both;
+}
+.radio p { margin: 0; }
+.radio button { display: grid; place-items: center; padding: 0; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.radio .icon { width: 1.05rem; height: 1.05rem; }
+
+/* a tiny vinyl record with a pink label; it spins while the music plays */
+.radio__record {
+  flex: none;
+  width: 3.1rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fffaf6 0 6%, var(--pink) 7% 30%, transparent 31%),
+    repeating-radial-gradient(circle, #3a2430 0 0.12rem, #4d3240 0.13rem 0.26rem);
+  box-shadow: 0 0 0 0.13rem var(--line), 0.1rem 0.2rem 0.3rem rgba(60, 30, 45, 0.3);
+}
+.radio__record::after {                       /* a glint, so the spin is visible */
+  content: "";
+  display: block;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 20deg, transparent 0 12%, rgba(255, 255, 255, 0.22) 15% 20%, transparent 23% 62%, rgba(255, 255, 255, 0.14) 65% 69%, transparent 72%);
+}
+.radio__record.is-spinning { animation: record-spin 3.2s linear infinite; }
+@keyframes record-spin { to { rotate: 1turn; } }
+
+.radio__top { display: flex; align-items: center; gap: 0.75rem; }
+.radio__now { flex: 1; min-width: 0; }
+.radio__label { font-size: 0.66rem; letter-spacing: 0.08em; color: #b0476a; }
+.radio__title { margin-top: 0.15rem !important; font: 700 1.35rem/1 var(--font-title); }
+.radio__by { margin-top: 0.15rem !important; font-size: 0.64rem; color: #8a5c70; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio__fold {
+  align-self: flex-start;
+  width: 1.7rem; height: 1.7rem;
+  background: none;
+  border: 0.12rem solid transparent;
+  border-radius: 50%;
+}
+.radio__fold:hover { border-color: #e3c2d0; background: #fdeef4; }
+
+/* play/pause + volume */
+.radio__controls { display: flex; align-items: center; gap: 0.7rem; margin-top: 0.8rem; }
+.radio__play {
+  flex: none;
+  width: 2.5rem; height: 2.5rem;
+  background: #f7c4d6;
+  border: 0.14rem solid var(--line);
+  border-radius: 50%;
+  box-shadow: 0.12rem 0.18rem 0 rgba(120, 70, 90, 0.3);
+  transition: translate 0.15s, box-shadow 0.15s;
+}
+.radio__play:hover { translate: 0 -0.1rem; box-shadow: 0.12rem 0.28rem 0 rgba(120, 70, 90, 0.3); }
+.radio__play:active { translate: 0.08rem 0.1rem; box-shadow: 0 0 0 rgba(120, 70, 90, 0.3); }
+.radio__play .icon { width: 1.15rem; height: 1.15rem; }
+.radio__play .icon path { fill: currentColor; }
+
+.radio__volume { flex: 1; display: flex; align-items: center; gap: 0.45rem; color: #8a5c70; }
+.radio__volume input {
+  flex: 1;
+  height: 0.5rem;
+  margin: 0;
+  appearance: none;
+  background: linear-gradient(90deg, var(--pink) var(--fill), #f1e3ea var(--fill));
+  border: 0.12rem solid var(--line);
+  border-radius: 1rem;
+  cursor: pointer;
+}
+.radio__volume input::-webkit-slider-thumb {
+  appearance: none;
+  width: 1rem; height: 1rem;
+  background: var(--paper);
+  border: 0.14rem solid var(--line);
+  border-radius: 50%;
+}
+.radio__volume input::-moz-range-thumb {
+  width: 0.8rem; height: 0.8rem;
+  background: var(--paper);
+  border: 0.14rem solid var(--line);
+  border-radius: 50%;
+}
+
+/* the playlist (one song for now) */
+.radio__playlist { margin-top: 0.8rem; padding-top: 0.65rem; border-top: 0.1rem dashed #e3c2d0; }
+.radio__playlist ol { margin: 0.4rem 0 0; padding: 0; list-style: none; }
+.radio__playlist li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+}
+.radio__playlist li.is-current { background: #fdeef4; }
+.radio__track { flex: 1; }
+.radio__length { color: #8a5c70; }
+
+/* three little bars that bounce while the song plays */
+.radio__bars { display: flex; align-items: flex-end; gap: 0.12rem; width: 0.9rem; height: 0.8rem; }
+.radio__bars i { flex: 1; height: 35%; background: #e2668f; border-radius: 0.1rem; }
+.radio__bars.is-moving i { animation: bar 0.9s ease-in-out infinite alternate; }
+.radio__bars.is-moving i:nth-child(2) { animation-delay: -0.3s; }
+.radio__bars.is-moving i:nth-child(3) { animation-delay: -0.6s; }
+@keyframes bar { to { height: 100%; } }
+
+/* folded away: just the record, as a round button */
+.radio--folded {
+  display: grid;
+  cursor: pointer;
+  width: auto;
+  padding: 0.35rem;
+  border-radius: 50%;
+}
+.radio--folded:hover .radio__record { scale: 1.06; }
+
+@media (max-width: 700px) {
+  .radio { right: 0.75rem; top: 0.75rem; }
+  .radio:not(.radio--folded) { width: min(16rem, calc(100% - 1.5rem)); padding: 0.75rem; }
+  .radio__playlist { display: none; }   /* phones: just the player */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio, .radio * { animation: none !important; transition: none !important; }
+}

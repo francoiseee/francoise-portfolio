@@ -1,5 +1,5 @@
-import sparkles from "../../assets/inside/certification/sparkles.png";
-import sticker from "../../assets/inside/certification/sticker.png";
+import sparkles from "../../assets/inside/certification/sparkles.webp";
+import sticker from "../../assets/inside/certification/sticker.webp";
 
 // The cute transition out of the room: a pink circle grows from the thing you
 // clicked, a sticker spins out of it and sparkles fly away. When the circle has

@@ -1,0 +1,296 @@
+/* The About me page: a wooden board with my photo on the left and a ruled
+   notebook on the right, in front of a blurred view of the room.
+   The words live in data/about.js. */
+.about {
+  --plum: #6d4458;
+  --ink: #4a2a3a;
+  --rose: #c9506a;
+  --paper: #fffdf8;
+  --wood: #b77a4c;
+  --wood-dark: #7b4a30;
+
+  position: relative;
+  height: 100%;
+  overflow: hidden auto;
+  padding: 2.5rem clamp(1rem, 4vw, 4rem) 3rem;
+  background: #fdf1fb;
+  color: var(--plum);
+  font-family: var(--font-body);
+  /* the pink circle from the room hands over to this page */
+  animation: from-blush 0.7s ease-out;
+}
+
+/* the room, soft and pale behind everything */
+.about__room {
+  position: fixed;
+  inset: -2rem;
+  background: center / cover no-repeat;
+  filter: blur(6px) saturate(0.8);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+
+/* ---------- the taped sign ---------- */
+.about-sign {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto 2rem;
+  padding: 0.9rem 3rem 1rem;
+  background: #fff;
+  border: 0.13rem solid #7a5a6c;
+  box-shadow: 0.3rem 0.4rem 0.8rem rgba(122, 90, 108, 0.2);
+  rotate: -1deg;
+  animation: slide-in 0.6s 0.1s ease-out both;
+}
+.about-sign h1 { margin: 0; font: 700 clamp(2.2rem, 4vw, 3rem)/1 var(--font-title); color: #8a3a52; }
+.about-sign::before, .about-sign::after {
+  content: "";
+  position: absolute;
+  top: -0.8rem;
+  width: 4.5rem; height: 1.4rem;
+  background: rgba(241, 214, 150, 0.85);
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.08);
+}
+.about-sign::before { left: -1rem; rotate: -8deg; }
+.about-sign::after  { right: -1rem; rotate: 6deg; }
+
+/* ---------- the wooden board ---------- */
+.about-board {
+  position: relative;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0.9rem;
+  background:
+    repeating-linear-gradient(90deg, rgba(90, 50, 25, 0.12) 0 0.15rem, transparent 0.15rem 1.1rem),
+    linear-gradient(var(--wood), #a86d42);
+  border: 0.15rem solid var(--wood-dark);
+  border-radius: 0.6rem;
+  box-shadow: 0.5rem 0.8rem 1.6rem rgba(90, 50, 40, 0.28);
+  animation: board-in 0.6s 0.15s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+}
+@keyframes board-in { from { opacity: 0; translate: 0 1.5rem; } }
+.about-board__surface {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.8fr) 1.4fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(1.5rem, 3vw, 3rem);
+  background: radial-gradient(rgba(170, 120, 90, 0.18) 0.07rem, transparent 0.09rem) 0 0 / 1.2rem 1.2rem, #fbf5ea;
+  border: 0.15rem solid var(--wood-dark);
+  border-radius: 0.3rem;
+}
+
+/* ---------- left: me ---------- */
+.about-me { display: grid; justify-items: center; align-content: start; gap: 1.2rem; padding-top: 0.5rem; }
+.about-me__hello {
+  z-index: 1;
+  margin: 0 0 -1.9rem;
+  padding: 0.45rem 0.9rem;
+  background: #fff;
+  border: 0.12rem solid var(--ink);
+  box-shadow: 0.15rem 0.2rem 0 rgba(120, 70, 90, 0.25);
+  font: 400 0.85rem/1 var(--font-mono);
+  rotate: -3deg;
+  animation: hello-pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes hello-pop { from { scale: 0.7; opacity: 0; } }
+
+/* an arched wooden frame, like a little window */
+.about-me__frame {
+  width: min(100%, 17rem);
+  aspect-ratio: 4 / 5;
+  padding: 0.75rem;
+  background: linear-gradient(145deg, #c98a59, #9c6038);
+  border: 0.15rem solid var(--wood-dark);
+  border-radius: 9rem 9rem 0.7rem 0.7rem;
+  box-shadow: 0.35rem 0.5rem 0.9rem rgba(90, 50, 40, 0.3);
+  cursor: pointer;
+  rotate: -1.5deg;
+  transition: rotate 0.3s cubic-bezier(0.3, 1.5, 0.5, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+.about-me__frame:hover { rotate: 1deg; }
+.about-me__frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 34% 40%;
+  border: 0.15rem solid var(--wood-dark);
+  border-radius: 8.3rem 8.3rem 0.3rem 0.3rem;
+}
+.about-me__frame img.is-poked { animation: photo-wiggle 0.45s ease-in-out; }
+@keyframes photo-wiggle { 25% { rotate: -3deg; scale: 0.97; } 60% { rotate: 2.5deg; } }
+
+.about-me__now {
+  width: min(100%, 15rem);
+  margin: 0.4rem 0 0;
+  padding: 1rem 1.1rem;
+  background: #fef0a8;
+  box-shadow: 0.25rem 0.35rem 0.55rem rgba(70, 37, 25, 0.2);
+  font: 400 0.82rem/1.5 var(--font-mono);
+  text-align: center;
+  rotate: 2deg;
+}
+.about-me__tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.about-me__tags li {
+  padding: 0.3rem 0.7rem;
+  background: #fff;
+  border: 0.1rem dashed #c99ab0;
+  border-radius: 1rem;
+  font: 400 0.75rem/1.2 var(--font-mono);
+}
+.about-me__tags li:first-child { background: #f9d3e0; border-style: solid; }
+
+/* ---------- right: the notebook ---------- */
+.notebook { min-width: 0; display: flex; flex-direction: column; }
+.notebook__tabs { display: flex; gap: 0.3rem; padding-left: 2.6rem; }
+.notebook__tab {
+  position: relative;
+  top: 0.15rem;
+  padding: 0.55rem 1.1rem 0.6rem;
+  background: #eadcf2;
+  border: 0.13rem solid var(--ink);
+  border-bottom: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  color: var(--ink);
+  font: 400 0.82rem/1 var(--font-mono);
+  cursor: pointer;
+  transition: background 0.15s, padding 0.15s;
+}
+.notebook__tab:nth-child(2) { background: #c9e6dc; }
+.notebook__tab:hover { padding-bottom: 0.8rem; top: -0.05rem; }
+.notebook__tab[aria-selected="true"] { z-index: 1; background: var(--paper); padding-bottom: 0.8rem; top: 0.15rem; }
+
+/* ruled paper with a red margin line and punched holes down the left */
+.notebook__paper {
+  --rule: 1.9rem;
+  position: relative;
+  flex: 1;
+  padding: 2rem clamp(1.2rem, 3vw, 2.6rem) 2rem 4rem;
+  background:
+    radial-gradient(circle at 1.3rem 50%, #e9dccd 0.38rem, var(--ink) 0.4rem 0.47rem, transparent 0.49rem) 0 0.6rem / 2.6rem 2.2rem repeat-y,
+    linear-gradient(90deg, transparent 2.85rem, #eea2b4 2.85rem 3rem, transparent 3rem),
+    repeating-linear-gradient(transparent 0 calc(var(--rule) - 1px), #d8e6ee calc(var(--rule) - 1px) var(--rule)) 0 1.2rem,
+    var(--paper);
+  border: 0.13rem solid var(--ink);
+  border-radius: 0 0.4rem 0.4rem 0.4rem;
+  box-shadow: 0.4rem 0.5rem 0 #e8b9cb;
+}
+/* a paperclip, drawn as two nested rounded loops */
+.notebook__clip {
+  position: absolute;
+  top: -1.1rem; right: 2.2rem;
+  width: 1.1rem; height: 3.4rem;
+  border: 0.17rem solid #9aa7b4;
+  border-radius: 0.6rem;
+  rotate: 8deg;
+}
+.notebook__clip::after {
+  content: "";
+  position: absolute;
+  inset: 0.45rem 0.22rem 0.9rem;
+  border: 0.17rem solid #9aa7b4;
+  border-top: 0;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.notebook__page { animation: page-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1); }
+@keyframes page-in { from { opacity: 0; translate: 0.8rem 0; } }
+
+.notebook__title { margin: 0 0 0.6rem; font: 700 clamp(2rem, 3.4vw, 2.8rem)/1.1 var(--font-title); color: var(--ink); }
+.notebook__text { max-width: 62ch; margin: 0; font-size: 0.98rem; line-height: var(--rule); color: #4f3341; }
+.notebook__text + .notebook__text { margin-top: var(--rule); }
+.notebook__label { margin: var(--rule) 0 0.5rem; font: 400 0.75rem/1 var(--font-mono); letter-spacing: 0.06em; color: var(--rose); }
+.notebook__stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.notebook__stack li {
+  padding: 0.2rem 0.55rem;
+  background: rgba(255, 173, 207, 0.35);
+  border-radius: 0.3rem;
+  font: 400 0.78rem/1.4 var(--font-mono);
+  color: #5a2f3c;
+}
+.notebook__signature { margin: 1.4rem 0 0; text-align: right; font: 700 1.9rem/1 var(--font-title); color: var(--rose); rotate: -3deg; }
+
+/* ---------- the CV as paper ---------- */
+.cv { position: relative; width: min(100%, 26rem); margin: 0.8rem auto 0; }
+.cv__sheet {
+  display: block;
+  padding: 0;
+  background: #fff;
+  border: 0;
+  box-shadow: 0.3rem 0.5rem 1rem rgba(70, 40, 55, 0.22);
+  cursor: pointer;
+}
+.cv__sheet img { width: 100%; height: auto; }
+.cv__sheet--front {
+  position: relative;
+  rotate: -1.2deg;
+  transition: rotate 0.25s, translate 0.25s, box-shadow 0.25s;
+  animation: sheet-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.cv__sheet--front:hover { rotate: 0deg; translate: 0 -0.3rem; box-shadow: 0.4rem 0.9rem 1.4rem rgba(70, 40, 55, 0.26); }
+@keyframes sheet-in { from { translate: 2rem 0.5rem; rotate: 4deg; } }
+.cv__sheet--back {
+  position: absolute;
+  inset: 0;
+  translate: 1.4rem 0.8rem;
+  rotate: 3.5deg;
+  opacity: 0.95;
+  transition: translate 0.25s;
+}
+.cv__sheet--back:hover { translate: 2.4rem 0.8rem; }
+/* tape on the front sheet */
+.cv__sheet--front::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -0.7rem; left: 50%;
+  width: 5rem; height: 1.4rem;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: rgba(241, 214, 150, 0.85);
+}
+
+.cv__bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 2rem; }
+.cv__pages { display: flex; gap: 0.35rem; }
+.cv__pages button {
+  width: 2.1rem; height: 2.1rem;
+  background: var(--paper);
+  border: 0.12rem solid var(--ink);
+  border-radius: 50%;
+  color: var(--ink);
+  font: 400 0.8rem/1 var(--font-mono);
+  cursor: pointer;
+}
+.cv__pages button[aria-pressed="true"] { background: #f7c4d6; }
+.cv__print {
+  padding: 0.65rem 1.1rem;
+  background: var(--paper);
+  border: 0.13rem solid var(--ink);
+  box-shadow: 0.2rem 0.25rem 0 rgba(120, 70, 90, 0.3);
+  color: var(--ink);
+  font: 400 0.85rem/1 var(--font-mono);
+  text-decoration: none;
+  transition: translate 0.15s, box-shadow 0.15s;
+}
+.cv__print:hover { translate: 0 -0.12rem; box-shadow: 0.2rem 0.38rem 0 rgba(120, 70, 90, 0.3); }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 900px) {
+  .about { padding-top: 1.5rem; }
+  .about-sign { margin: 4.5rem auto 1.5rem; }
+  .about-board__surface { grid-template-columns: 1fr; }
+  .about-me__frame { width: min(70%, 15rem); }
+}
+@media (max-width: 520px) {
+  .about { padding-inline: 0.6rem; }
+  .about-board { padding: 0.45rem; }
+  .about-board__surface { padding: 1.2rem 0.6rem; }
+  .notebook__paper { padding: 1.5rem 1rem 1.5rem 3.4rem; }
+  .notebook__tabs { padding-left: 1rem; }
+  .cv__bar { flex-wrap: wrap; }
+}
+
+/* ---------- for visitors who want less movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .about, .about * { animation: none !important; transition: none !important; }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Burst from "./Burst.jsx";
-import catIdle from "../assets/landing/cat.png";
-import catYawn from "../assets/landing/cat-yawn.png";
+import catIdle from "../assets/landing/cat.webp";
+import catYawn from "../assets/landing/cat-yawn.webp";
 
 const YAWN_MS = 1400;
 
@@ -29,7 +29,7 @@ export default function Cat({ onClick }) {
         <img src={catIdle} alt="" draggable="false" className="cat__img cat__img--idle" />
         <img src={catYawn} alt="" draggable="false" className="cat__img cat__img--yawn" />
       </span>
-      {clicks > 0 && <Burst key={clicks} />}
+      {clicks > 0 && <Burst key={`burst-${clicks}`} />}
     </button>
   );
 }

@@ -29,5 +29,5 @@ sheets = {name: Image.open(ART / f"{name}.png").convert("RGBA") for name in ("as
 for name, (sheet, box, factor) in ITEMS.items():
     piece = sheets[sheet].crop(box)
     piece = piece.resize((round(piece.width * factor), round(piece.height * factor)), Image.LANCZOS)
-    piece.save(ART / f"{name}.png", optimize=True)
-    print(f"{name}.png  {piece.width} x {piece.height}")
+    piece.save(ART / f"{name}.webp", "WEBP", quality=88, method=6)
+    print(f"{name}.webp  {piece.width} x {piece.height}")

@@ -1,4 +1,4 @@
-import catImg from "../../assets/landing/cat.png";
+import catImg from "../../assets/landing/cat.webp";
 
 // The cat that does the talking. It bounces while a line is being typed.
 export default function HomeCat({ talking }) {

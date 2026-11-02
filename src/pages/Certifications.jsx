@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Arrow from "../components/certifications/Arrow.jsx";
+import Arrow from "../components/Arrow.jsx";
+import BackButton from "../components/BackButton.jsx";
 import CertificateSheet from "../components/certifications/CertificateSheet.jsx";
 import CoverSheet from "../components/certifications/CoverSheet.jsx";
 import MarkerFilter from "../components/certifications/MarkerFilter.jsx";
 import { useMediaQuery } from "../hooks/useMediaQuery.js";
 import { certificates, cover } from "../data/certifications.js";
 import { prefersReducedMotion } from "../utils/motion.js";
-import { playPageTurn } from "../utils/pageTurnSound.js";
+import { playPageTurn } from "../utils/sounds.js";
 
 // Phones and tablets held upright show one page at a time; everything else
 // shows the open book (two pages).
@@ -22,7 +22,6 @@ const ACCENTS = ["rose", "teal"]; // certificate colours take turns
 // The page behind the stack of books in the room: an open book. Turn the pages
 // with the buttons, the arrow keys, or by swiping. Its words live in data/certifications.js.
 export default function Certifications() {
-  const navigate = useNavigate();
   const onePage = useMediaQuery(ONE_PAGE_QUERY);
   const [page, setPage] = useState(0);          // the page we are on (or the left page of the spread)
   const [turning, setTurning] = useState(null); // { way, to } while a page is mid-turn
@@ -39,9 +38,9 @@ export default function Certifications() {
     const to = Math.min(Math.max(firstShown + way * step, 0), lastFirstShown);
     if (to === firstShown) return;
     if (prefersReducedMotion()) return setPage(to);
-    playPageTurn();
+    playPageTurn(onePage ? 0.8 : 1);
     setTurning({ way, to });
-  }, [turning, firstShown, step, lastFirstShown]);
+  }, [turning, firstShown, step, lastFirstShown, onePage]);
 
   const finishTurn = useCallback(() => {
     setPage(turning.to);
@@ -114,16 +113,21 @@ export default function Certifications() {
     );
   };
 
+  // both sides of the turning page; each half of the bending leaf shows its own slice of them
+  const leafFaces = leaf && (
+    <>
+      <div className="leaf__face leaf__face--front">{renderPage(leaf.front)}</div>
+      {leaf.back !== undefined && <div className="leaf__face leaf__face--back">{renderPage(leaf.back)}</div>}
+    </>
+  );
+
   return (
     <main className="certs">
       <MarkerFilter />
       {[1, 2, 3, 4].map((n) => <span key={n} className={`blob blob--${n}`} aria-hidden="true" />)}
 
       <header className="certs__bar">
-        <button type="button" className="pill" onClick={() => navigate("/inside")}>
-          <Arrow dir="left" />
-          <span>Back<span className="pill__extra"> to my room</span></span>
-        </button>
+        <BackButton className="certs__back" />
         <h1 className="certs__title">My certification book</h1>
       </header>
 
@@ -144,14 +148,15 @@ export default function Certifications() {
               <>
                 <span className="cast cast--left" />
                 <span className="cast cast--right" />
+                {/* The leaf bends like paper: its half by the spine turns, and its outer
+                    half (hinged to it) lags or leads a little. Each half shows its own
+                    slice of the same page, so together they look like one sheet. */}
                 <div
                   className="leaf"
                   onAnimationEnd={(e) => e.target === e.currentTarget && finishTurn()}
                 >
-                  <div className="leaf__face leaf__face--front">{renderPage(leaf.front)}</div>
-                  {leaf.back !== undefined && (
-                    <div className="leaf__face leaf__face--back">{renderPage(leaf.back)}</div>
-                  )}
+                  <div className="leaf__half leaf__half--outer">{leafFaces}</div>
+                  {leafFaces}
                 </div>
               </>
             )}

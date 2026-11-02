@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
+import { clamp } from "../utils/clamp.js";
 
 const TAP_DISTANCE = 5; // px a pointer may wander and still count as a tap, not a drag
-const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
 // Lets an absolutely positioned element be dragged around (mouse, finger or pen).
 // Its place is kept in % of its parent, so it survives resizing, and it can never

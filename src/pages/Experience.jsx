@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Arrow from "../components/certifications/Arrow.jsx";
+import BackButton from "../components/BackButton.jsx";
 import Board from "../components/experience/Board.jsx";
 import Draggable from "../components/experience/Draggable.jsx";
 import Note from "../components/experience/Note.jsx";
@@ -13,7 +12,6 @@ const place = ({ x, y, w, tilt = 0 }) => ({ left: `${x}%`, top: `${y}%`, "--w": 
 // Drag the notes around; tap one to open it and read what was done there.
 // The pictures, the quote and the stickers stay put. What is on the page lives in data/experience.js.
 export default function Experience() {
-  const navigate = useNavigate();
   const [openId, setOpenId] = useState(null); // one note is open at a time
   const toggle = (id) => setOpenId((current) => (current === id ? null : id));
 
@@ -25,10 +23,7 @@ export default function Experience() {
 
   return (
     <main className="experience">
-      <button type="button" className="pill exp-exit" onClick={() => navigate("/inside")}>
-        <Arrow dir="left" />
-        <span>Back<span className="pill__extra"> to my room</span></span>
-      </button>
+      <BackButton />
 
       <div className="exp-stage">
         <header className="exp-sign">

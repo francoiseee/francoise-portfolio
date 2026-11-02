@@ -1,4 +1,4 @@
-import cloudImg from "../../assets/homepage/cloud.png";
+import cloudImg from "../../assets/homepage/cloud.webp";
 import { clouds, patches, sun, wash } from "../../data/sky.js";
 
 const TILE = 100; // the sky repeats every 100 units

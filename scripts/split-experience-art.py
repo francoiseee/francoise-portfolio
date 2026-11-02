@@ -26,10 +26,10 @@ for name, (sheet, area, width) in STICKERS.items():
     piece = sheets[sheet].crop(area)
     piece = piece.crop(piece.getbbox())  # trim the empty space around it
     piece = piece.resize((width, round(piece.height * width / piece.width)), Image.LANCZOS)
-    piece.save(ART / f"{name}.png", optimize=True)
-    print(f"{name}.png  {piece.width} x {piece.height}")
+    piece.save(ART / f"{name}.webp", "WEBP", quality=88, method=6)
+    print(f"{name}.webp  {piece.width} x {piece.height}")
 
 photo = Image.open(ART / "tarotail.png").convert("RGB")
 photo = photo.resize((800, round(photo.height * 800 / photo.width)), Image.LANCZOS)
-photo.save(ART / "team.jpg", quality=85, optimize=True)
-print(f"team.jpg  {photo.width} x {photo.height}")
+photo.save(ART / "team.webp", "WEBP", quality=85, method=6)
+print(f"team.webp  {photo.width} x {photo.height}")

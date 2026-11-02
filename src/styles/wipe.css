@@ -1,5 +1,6 @@
-/* The pink circle wipe between the room and the certification book. */
-:root { --blush: #f9d6e8; }   /* the book page's background, so the hand-off is seamless */
+/* The pink circle wipe from the room to the page behind whatever was clicked.
+   Each of those pages starts out --blush pink (from-blush), so the hand-off is seamless. */
+@keyframes from-blush { from { background-color: var(--blush); } }
 
 .wipe {
   position: fixed;

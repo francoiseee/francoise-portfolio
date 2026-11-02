@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { loadSprites } from "./sprites.js";
 import { startFill } from "./fillEngine.js";
 import { pileStore } from "./pileStore.js";
+import { prefersReducedMotion } from "../../utils/motion.js";
 
 // Kibble rains down and piles up until the whole screen is covered,
 // then calls onDone. (The pile is saved so the next page can drain it.)
@@ -10,7 +11,7 @@ export default function KibbleFill({ onDone }) {
   const fallRef = useRef();
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       onDone();
       return;
     }

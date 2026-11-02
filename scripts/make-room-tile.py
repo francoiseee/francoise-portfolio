@@ -1,4 +1,4 @@
-"""Builds src/assets/inside/livingroom-tile.png from livingroom.png.
+"""Builds src/assets/inside/livingroom-tile.webp from livingroom.webp.
 
 The tile is the room picture followed by a mirrored copy of it. Repeated
 sideways (see styles/inside.css), it makes the wall and floor carry on to
@@ -11,9 +11,9 @@ from PIL import Image, ImageOps
 
 ART = Path(__file__).resolve().parent.parent / "src/assets/inside"
 
-room = Image.open(ART / "livingroom.png").convert("RGB")
+room = Image.open(ART / "livingroom.webp").convert("RGB")
 tile = Image.new("RGB", (room.width * 2, room.height))
 tile.paste(room, (0, 0))
 tile.paste(ImageOps.mirror(room), (room.width, 0))
-tile.save(ART / "livingroom-tile.png", optimize=True)
-print("livingroom-tile.png", tile.size)
+tile.save(ART / "livingroom-tile.webp", "WEBP", quality=88, method=6)
+print("livingroom-tile.webp", tile.size)

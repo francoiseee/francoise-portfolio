@@ -1,6 +1,6 @@
-import houseImg from "../assets/homepage/house.png";
-import treeImg from "../assets/homepage/tree.png";
-import ballImg from "../assets/homepage/ball.png";
+import houseImg from "../assets/homepage/house.webp";
+import treeImg from "../assets/homepage/tree.webp";
+import ballImg from "../assets/homepage/ball.webp";
 
 // Where things sit in the yard. Every prop has two placements:
 //   wide: landscape screens, where the props are spread out across the screen

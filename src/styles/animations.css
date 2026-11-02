@@ -109,7 +109,9 @@
   to   { scale: 1.4; opacity: 0; }
 }
 @keyframes fade-in { from { opacity: 0; } }
-@keyframes rise-in { from { transform: translateY(25%); } }
+/* shared by the pages behind the room: things slide in from above or rise from below */
+@keyframes slide-in { from { opacity: 0; translate: 0 -1rem; } }
+@keyframes rise-in  { from { opacity: 0; translate: 0 1rem; } }
 
 /* the cat: breathes while standing, swaps legs on every footstep while walking (the game flips is-step-2), hops when it gets to the door */
 .house-cat { animation: cat-bob 2.2s ease-in-out infinite; }

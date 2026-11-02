@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { clamp } from "../utils/clamp.js";
 import { playMeow } from "../utils/sounds.js";
 
 const FAR_SCALE = 0.6;   // how small things look at the back of the yard
@@ -16,8 +17,6 @@ const CAT_PAD = 0.3;     // how close (in cat widths) the cat may get to the hou
 const STEP = 0.35;       // how far the cat travels (in cat widths) between one footstep and the next
 const CHASE_START = 0.25; // the chasing cat sets off once the ball is this far (in cat widths)...
 const CHASE_STOP = 0.05; // ...and stops when it's this close, so it doesn't twitch as the ball slows
-
-const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
 // --- solid things --------------------------------------------------------
 // The house and the tree are boxes { left, right, bottom, top } (bottom/top: y goes up).
@@ -112,6 +111,8 @@ export function useCatGame({ world, yard, house, tree, ball, cat, onArrive }) {
     let chaseSide = 1;               // which side of the ball the cat waits on
     let grab = null;                 // while the ball is held: where the finger holds it
     let ready = false, walking = false, frame = null, last = 0;
+    const listeners = new AbortController();
+    const { signal } = listeners;
 
     // --- layout -----------------------------------------------------------
     // The cat and ball are placed by CSS; this reads where that put them.
@@ -211,14 +212,11 @@ export function useCatGame({ world, yard, house, tree, ball, cat, onArrive }) {
       return reachable({ x: ballPos.x + chaseSide * layout.catWidth * 0.55, y: ballPos.y });
     }
 
-    // a spot the cat can actually stand on: on screen and not inside the house or tree
-    function reachable(p) {
-      const half = layout.catWidth / 2;
-      return pushOut({ x: clamp(p.x, half, layout.width - half), y: clamp(p.y, 0, layout.catCeiling) }, layout.catSolid);
-    }
-
-    // keeps the way-around corners on screen
+    // keeps a spot (or a way-around corner) where the cat fits on screen
     const onScreen = (p) => ({ x: clamp(p.x, layout.catWidth / 2, layout.width - layout.catWidth / 2), y: clamp(p.y, 0, layout.catCeiling) });
+
+    // a spot the cat can actually stand on: on screen and not inside the house or tree
+    const reachable = (p) => pushOut(onScreen(p), layout.catSolid);
 
     function setWalking(on) {
       if (on === walking) return;
@@ -362,6 +360,7 @@ export function useCatGame({ world, yard, house, tree, ball, cat, onArrive }) {
 
     function onKey(e) {
       if (!ready || (e.key !== " " && e.key !== "Enter")) return;
+      if (e.target.closest?.("button, a, input")) return; // a key meant for a control (like the music player)
       if (e.repeat) return e.preventDefault();
       e.preventDefault();
       walkTo({ ...layout.door, atDoor: true });
@@ -375,27 +374,20 @@ export function useCatGame({ world, yard, house, tree, ball, cat, onArrive }) {
     function start() {
       ready = true;
       reset();
-      window.addEventListener("resize", onResize);
+      window.addEventListener("resize", onResize, { signal });
     }
 
-    yard.current.addEventListener("animationend", start, { once: true });
-    ballEl.addEventListener("pointerdown", onBallDown);
-    ballEl.addEventListener("pointermove", onBallMove);
-    ballEl.addEventListener("pointerup", onBallUp);
-    ballEl.addEventListener("pointercancel", onBallUp);
-    worldEl.addEventListener("click", onTap);
-    window.addEventListener("keydown", onKey);
+    yard.current.addEventListener("animationend", start, { once: true, signal });
+    ballEl.addEventListener("pointerdown", onBallDown, { signal });
+    ballEl.addEventListener("pointermove", onBallMove, { signal });
+    ballEl.addEventListener("pointerup", onBallUp, { signal });
+    ballEl.addEventListener("pointercancel", onBallUp, { signal });
+    worldEl.addEventListener("click", onTap, { signal });
+    window.addEventListener("keydown", onKey, { signal });
 
     return () => {
       cancelAnimationFrame(frame);
-      yard.current?.removeEventListener("animationend", start);
-      ballEl.removeEventListener("pointerdown", onBallDown);
-      ballEl.removeEventListener("pointermove", onBallMove);
-      ballEl.removeEventListener("pointerup", onBallUp);
-      ballEl.removeEventListener("pointercancel", onBallUp);
-      worldEl.removeEventListener("click", onTap);
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("resize", onResize);
+      listeners.abort(); // removes every listener above, and the resize one
     };
   }, [world, yard, house, tree, ball, cat]);
 }

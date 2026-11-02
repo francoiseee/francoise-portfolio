@@ -1,4 +1,4 @@
-import sparkles from "../../assets/inside/certification/sparkles.png";
+import sparkles from "../../assets/inside/certification/sparkles.webp";
 
 // The first page of the book: title, subtitle and a sprinkle of stars.
 export default function CoverSheet({ cover, number }) {

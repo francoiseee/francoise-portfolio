@@ -1,8 +1,8 @@
-import heartImg from "../assets/experience/heart.png";
-import starImg from "../assets/experience/star.png";
-import clipImg from "../assets/experience/clip.png";
-import teamImg from "../assets/experience/team.jpg";
-import certificateImg from "../assets/experience/kadakareer.jpg";
+import heartImg from "../assets/experience/heart.webp";
+import starImg from "../assets/experience/star.webp";
+import clipImg from "../assets/experience/clip.webp";
+import teamImg from "../assets/experience/team.webp";
+import certificateImg from "../assets/experience/kadakareer.webp";
 
 // Everything on the experience cork board. This is the only file you need to edit
 // to change what is on it.

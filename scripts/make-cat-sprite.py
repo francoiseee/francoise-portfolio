@@ -1,4 +1,4 @@
-"""Builds src/assets/homepage/cat-sprite.png from the two big cat drawings.
+"""Builds src/assets/homepage/cat-sprite.webp from the two big cat drawings.
 
 The sheet holds three frames side by side, all in cells of the same size with
 the feet on the bottom edge:  [standing] [walking 1] [walking 2]
@@ -41,5 +41,5 @@ for i, frame in enumerate(frames):
     # centered in its cell, feet on the bottom edge
     sheet.paste(frame, (i * cell_w + (cell_w - frame.width) // 2, cell_h - frame.height))
 
-sheet.save(ART / "cat-sprite.png", optimize=True)
-print(f"cat-sprite.png: {sheet.width}x{sheet.height}, cell {cell_w}x{cell_h}")
+sheet.save(ART / "cat-sprite.webp", "WEBP", quality=88, method=6)
+print(f"cat-sprite.webp: {sheet.width}x{sheet.height}, cell {cell_w}x{cell_h}")

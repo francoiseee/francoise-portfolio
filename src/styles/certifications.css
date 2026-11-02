@@ -10,7 +10,6 @@
   --rose: #c9506a;
   --teal: #2f7f87;
   --tape: #f9dc9b;
-  --font-body: "Nunito", system-ui, sans-serif;
 
   --chrome: 13rem;        /* height used by the top bar and the buttons */
   --book-w: min(92vw, 1320px, (100vh - var(--chrome)) * 1.5);
@@ -35,7 +34,7 @@
   align-items: center;
   padding: 2.5rem 3rem 0;
 }
-.certs__bar .pill { justify-self: start; }
+.certs__back { justify-self: start; }
 .certs__title {
   margin: 0;
   font: 700 2.6rem/1 var(--font-title);
@@ -46,30 +45,6 @@
 /* the bar and buttons slide in once the book has popped open */
 .certs__bar { animation: slide-in 0.6s 0.15s ease-out both; }
 .certs__nav { animation: rise-in 0.6s 0.3s ease-out both; }
-@keyframes slide-in { from { opacity: 0; translate: 0 -1rem; } }
-@keyframes rise-in  { from { opacity: 0; translate: 0 1rem; } }
-
-/* ---------- buttons ---------- */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1.6rem;
-  background: var(--paper);
-  border: 0.15rem solid var(--line);
-  box-shadow: 0.25rem 0.3rem 0 rgba(120, 70, 90, 0.25);
-  color: var(--line);
-  font: 800 1rem/1 var(--font-body);
-  white-space: nowrap;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-}
-.pill:hover:not(:disabled) { transform: translateY(-0.15rem); box-shadow: 0.25rem 0.45rem 0 rgba(120, 70, 90, 0.25); }
-.pill:active:not(:disabled) { transform: translateY(0.1rem); box-shadow: 0.1rem 0.15rem 0 rgba(120, 70, 90, 0.25); }
-.pill:disabled { opacity: 0.45; cursor: default; }
-.pill:focus-visible { outline: 0.2rem dashed var(--rose); outline-offset: 0.25rem; }
-.pill__icon { width: 1.1rem; height: 1.1rem; }
 
 /* ---------- stage + book ---------- */
 .certs__stage {
@@ -118,7 +93,7 @@
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   grid-auto-rows: minmax(0, 1fr);   /* pages are exactly as tall as the book, whatever is on them */
-  perspective: 400cqw;     /* depth for the page turn; large = gentle, natural looking */
+  perspective: 900cqw;     /* depth for the page turn; large = gentle, so the page never balloons out of the book */
 }
 
 /* ---------- turning a page ----------
@@ -138,6 +113,28 @@
 }
 .book--single .leaf { --leaf-end: -100deg; left: 0; width: 100%; }  /* one page: it just peels away */
 @keyframes leaf-turn { to { transform: rotateY(var(--leaf-end)); } }
+
+/* The outer half of the leaf, hinged to the half by the spine. Paper is not stiff:
+   the edge you pull leads as the page lifts, then trails behind as it lands. */
+.leaf__half--outer {
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 50%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  animation: leaf-curl var(--turn-time) var(--turn-ease) both;
+}
+@keyframes leaf-curl {
+  30% { transform: rotateY(-26deg); }
+  68% { transform: rotateY(14deg); }
+  to  { transform: rotateY(0deg); }
+}
+.leaf__half--outer > .leaf__face { inset: 0 0 0 -100%; }   /* the whole page again, so its slice lines up */
+/* each half shows only its slice of the page (a hair of overlap hides the seam) */
+.leaf > .leaf__face--front                    { clip-path: inset(0 49.6% 0 0); }
+.leaf > .leaf__face--back                     { clip-path: inset(0 0 0 49.6%); }
+.leaf__half--outer > .leaf__face--front       { clip-path: inset(0 0 0 49.6%); }
+.leaf__half--outer > .leaf__face--back        { clip-path: inset(0 49.6% 0 0); }
 
 .leaf__face {
   position: absolute;
@@ -181,7 +178,7 @@
 @keyframes cast-left  { 0%, 45% { opacity: 0; } 75% { opacity: 1; } 100% { opacity: 0; } }
 
 /* going back: the same turn, played backwards */
-.is-prev .leaf, .is-prev .leaf__face::after, .is-prev .cast { animation-direction: reverse; }
+.is-prev .leaf, .is-prev .leaf__half, .is-prev .leaf__face::after, .is-prev .cast { animation-direction: reverse; }
 
 /* ---------- one page ---------- */
 .sheet {
@@ -252,9 +249,6 @@
 }
 .sparkles--top    { top: calc(var(--u) * 4);    right: calc(var(--u) * 3.4); }
 .sparkles--bottom { bottom: calc(var(--u) * 3); left: calc(var(--u) * 3); rotate: 180deg; }
-.sparkles { animation: twinkle 3.5s ease-in-out infinite alternate; }
-.sparkles--bottom { animation-delay: -1.7s; }
-@keyframes twinkle { from { scale: 0.95; opacity: 0.85; } to { scale: 1.05; opacity: 1; } }
 .book--single .sparkles { width: calc(var(--u) * 9); }
 .book--single .sparkles--top { top: calc(var(--u) * 3); }
 
@@ -417,16 +411,12 @@
 .blob--3 { --s: clamp(5rem, 9vw, 10rem); right: -4%; top: 34%;    background: #bf9db0; }
 .blob--4 { --s: clamp(5rem, 8vw, 9rem);  right: -2%; bottom: 8%;  background: #f6cdb0; }
 
-/* ---------- tablets (upright) and phones ---------- */
-@media (max-width: 900px) {
-  .pill__extra { display: none; }   /* "Back to my room" -> "Back", "Next page" -> "Next" */
-}
+/* ---------- phones ---------- */
 @media (max-width: 700px) {
   .certs { --chrome: 11rem; }
-  .certs__bar { grid-template-columns: auto 1fr; gap: 0.75rem; padding: 1.25rem 1rem 0; }
+  .certs__bar { grid-template-columns: auto 1fr; gap: 0.75rem; padding: 1.25rem 5rem 0 1rem; }   /* right: room for the music record */
   .certs__title { font-size: 1.4rem; }
   .certs__nav { gap: 0.75rem; padding: 1rem 1rem 1.5rem; }
-  .pill { padding: 0.7rem 1.1rem; font-size: 0.9rem; }
 }
 
 /* phones held sideways: very little height, so tighten everything */
@@ -441,5 +431,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .book, .certs__bar, .certs__nav, .sparkles { animation: none; }
+  .book, .certs__bar, .certs__nav { animation: none; }
 }

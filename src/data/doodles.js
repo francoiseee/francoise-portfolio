@@ -6,14 +6,14 @@
 // `shake` is "spin" (wobbles) or "none" (stays still), see styles/animations.css,
 // `delay` / `speed` (seconds) keep the spinning doodles from moving in sync.
 
-import baguettePink from "../assets/landing/baguette-pink.png";
-import baguetteYellow from "../assets/landing/baguette-yellow.png";
-import baguetteBlue from "../assets/landing/baguette-blue.png";
-import paperPlane from "../assets/landing/paper-plane.png";
-import swirlTopLeft from "../assets/landing/swirl-top-left.png";
-import swirlTopRight from "../assets/landing/swirl-top-right.png";
-import swirlBottomLeft from "../assets/landing/swirl-bottom-left.png";
-import swirlBottomRight from "../assets/landing/swirl-bottom-right.png";
+import baguettePink from "../assets/landing/baguette-pink.webp";
+import baguetteYellow from "../assets/landing/baguette-yellow.webp";
+import baguetteBlue from "../assets/landing/baguette-blue.webp";
+import paperPlane from "../assets/landing/paper-plane.webp";
+import swirlTopLeft from "../assets/landing/swirl-top-left.webp";
+import swirlTopRight from "../assets/landing/swirl-top-right.webp";
+import swirlBottomLeft from "../assets/landing/swirl-bottom-left.webp";
+import swirlBottomRight from "../assets/landing/swirl-bottom-right.webp";
 
 export const CANVAS = {
   wide: { width: 2000, height: 1130 },

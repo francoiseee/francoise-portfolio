@@ -8,7 +8,7 @@
   /* On a wide screen the wall and floor carry on past the room: the tile is the room
      followed by its mirror image, repeated sideways, with the real room centered on it. */
   background:
-    url("../assets/inside/livingroom-tile.png") calc(50% + var(--room-w) / 2) 100% / calc(var(--room-w) * 2) auto repeat-x,
+    url("../assets/inside/livingroom-tile.webp") calc(50% + var(--room-w) / 2) 100% / calc(var(--room-w) * 2) auto repeat-x,
     #fff7fe;                 /* the wall colour of livingroom.png */
 }
 

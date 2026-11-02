@@ -10,7 +10,7 @@
 //   link    { label, url } for the button under the picture (optional)
 //
 // Pictures: drop the image into src/assets/certifications/ and name it after the
-// certificate's id (for example comptia-itf-plus.png). It shows up by itself, no code
+// certificate's id (for example comptia-itf-plus.webp; png and jpg work too). It shows up by itself, no code
 // needed. Until then the page shows a placeholder, or the `image` link if there is one.
 //
 // To add a certificate, copy one block. The book grows by itself:
@@ -134,6 +134,22 @@ const list = [
     issuer: "Google",
     issued: "Dec 2025",
     link: { label: "View credential", url: "https://www.coursera.org/account/accomplishments/verify/H1P3R0125MSN" },
+  },
+  {
+    id: "relational-database-v8",
+    title: "Relational Database V8",
+    issuer: "freeCodeCamp",
+    issued: "Feb 2025",
+    note: "Credential ID: francoise_gurango-rd",
+    link: { label: "View credential", url: "https://www.freecodecamp.org/certification/francoise_gurango/relational-database-v8" },
+  },
+  {
+    id: "legacy-responsive-web-design",
+    title: "Legacy Responsive Web Design V8",
+    issuer: "freeCodeCamp",
+    issued: "Sep 2024",
+    note: "Credential ID: francoise_gurango-rwd",
+    link: { label: "View credential", url: "https://www.freecodecamp.org/certification/francoise_gurango/responsive-web-design" },
   },
 ];
 
